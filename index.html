@@ -4,68 +4,114 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The Rest Group Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f2f5f3;--surface:#fff;--fg:#13201b;--muted:#5a6a63;--line:#d5dfda;--accent:#0d5c4c;--accent-fg:#fff;--accent-soft:#dcefe8;--err:#8a4b00}
-@media (prefers-color-scheme:dark){:root{--bg:#0d1512;--surface:#16211c;--fg:#e8f0ec;--muted:#9bb0a7;--line:#2a3a33;--accent:#5fd0b0;--accent-fg:#06231b;--accent-soft:#1b3a31;--err:#f0b866;color-scheme:dark}}
+:root{
+  --bg:#f3f2f6; --surface:#ffffff; --fg:#1d1a26; --muted:#6a6577; --line:#e0dde8;
+  --accent:#4a2c6d; --accent-fg:#ffffff; --accent-soft:#eee7f6; --hero:#2a1840; --hero-fg:#f6f1fb; --hero-muted:#c9bcdc;
+  --tag:#e9f3ec; --tag-fg:#1f5a34; --price:#fbeed8; --price-fg:#8a4b00; --err:#a3331f;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif; --body:"DM Sans","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#14101c; --surface:#1e1829; --fg:#efeaf7; --muted:#a79fb8; --line:#352c47;
+  --accent:#c4a3ee; --accent-fg:#1a0f2b; --accent-soft:#2c2140; --hero:#0d0a14; --hero-fg:#f6f1fb; --hero-muted:#b5a8cb;
+  --tag:#1b3326; --tag-fg:#8fd5a8; --price:#3a2d14; --price-fg:#f0b866; --err:#ff9b86; color-scheme:dark}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px 16px 56px}
-main{max-width:640px;margin:0 auto;display:grid;gap:18px}
-h1,h2{margin:0;line-height:1.1}
-h1{font-size:clamp(28px,8vw,42px);letter-spacing:-.02em}
-h2{font-size:20px}
-.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-header{display:grid;gap:10px;padding-bottom:18px;border-bottom:2px solid var(--fg)}
-.muted{color:var(--muted);font-size:15px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:12px}
-label.fld{display:grid;gap:6px;font-weight:600}
-input[type=text],textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%}
-textarea{min-height:76px;resize:vertical}
-.opt{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:6px;padding:12px;cursor:pointer;background:var(--bg)}
-.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
-.opt input{accent-color:var(--accent);width:20px;height:20px;margin:0;flex:none}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-button{font:inherit;font-weight:700;border-radius:6px;padding:12px 18px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);cursor:pointer;justify-self:start}
-button:disabled{opacity:.5}
-.err{color:var(--err);font-weight:700}
-.done{text-align:left}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--body)}
+.hero{background:var(--hero);color:var(--hero-fg);padding:40px 16px 64px}
+.wrap{max-width:640px;margin:0 auto}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--hero-muted)}
+h1{font:800 clamp(34px,10vw,56px)/1 var(--display);letter-spacing:-.025em;margin:12px 0 20px;text-wrap:balance}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:6px 14px;font-weight:500;font-size:15px}
+.lead{margin:18px 0 0;color:var(--hero-muted);max-width:46ch}
+main{max-width:640px;margin:-36px auto 0;padding:0 16px 64px;display:grid;gap:16px;position:relative}
+form{display:grid;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:14px;box-shadow:0 1px 2px rgba(20,10,40,.04),0 8px 24px rgba(20,10,40,.06)}
+.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h2{font:700 24px/1.1 var(--display);margin:0;letter-spacing:-.01em}
+.opt-label{font-size:13px;color:var(--muted)}
+.note{margin:-6px 0 0;color:var(--muted);font-size:14px}
+label.fld{display:grid;gap:8px;font-weight:700;font-size:15px}
+input[type=text],textarea{font:inherit;font-weight:400;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:13px 14px;width:100%}
+textarea{min-height:88px;resize:vertical}
+input[type=text]:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.opts{display:grid;gap:8px}
+.opt{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;background:var(--surface);transition:border-color .12s,background .12s}
+.opt:hover{border-color:var(--accent)}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.opt:has(input:focus-visible){outline:3px solid var(--accent);outline-offset:2px}
+.opt input{appearance:none;-webkit-appearance:none;width:22px;height:22px;border:2px solid var(--muted);border-radius:50%;margin:0;display:grid;place-content:center;background:var(--surface)}
+.opt input::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--accent);transform:scale(0);transition:transform .12s}
+.opt input:checked{border-color:var(--accent)}
+.opt input:checked::before{transform:scale(1)}
+.dish{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;min-width:0}
+.dish b{font-weight:500;overflow-wrap:anywhere}
+.tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--tag);color:var(--tag-fg);border-radius:6px;padding:2px 7px}
+.tag.price{background:var(--price);color:var(--price-fg);text-transform:none;letter-spacing:0}
+.opt.none{border-style:dashed;color:var(--muted)}
+.opt.none .dish b{font-weight:400}
 .hp{position:absolute;left:-9999px}
+button{font:700 17px var(--body);border-radius:12px;padding:16px 22px;border:0;background:var(--accent);color:var(--accent-fg);cursor:pointer;width:100%}
+button:hover{filter:brightness(1.08)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+button:disabled{opacity:.55;cursor:default}
+button.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent);width:auto;padding:12px 18px;font-size:15px}
+#msg{margin:0;font-size:15px;color:var(--muted);min-height:1.5em;text-align:center}
+#msg.err{color:var(--err);font-weight:700}
+.tick{width:52px;height:52px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:grid;place-content:center;font-size:28px;font-weight:700}
+.sum{display:grid;gap:12px;margin:0}
+.sum div{display:grid;gap:2px;border-top:1px solid var(--line);padding-top:12px}
+.sum dt{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sum dd{margin:0;font-weight:500}
+.legend{font-size:13px;color:var(--muted);text-align:center;margin:4px 0 0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<main>
-  <header>
+<header class="hero">
+  <div class="wrap">
     <div class="eyebrow">The Rest · Group booking</div>
     <h1 id="title"></h1>
-    <p class="muted" id="facts"></p>
-  </header>
+    <div class="chips" id="chips"></div>
+    <p class="lead">Choose what you'd like for each course. Skip any you don't want. Only your name is needed.</p>
+  </div>
+</header>
 
-  <form id="form" class="card" style="padding:0;border:0;background:none" novalidate>
-    <div class="card"><label class="fld">Your name<input type="text" id="name" autocomplete="name" placeholder="First and last name"></label></div>
-    <div id="courses" style="display:grid;gap:18px"></div>
+<main>
+  <form id="form" novalidate>
+    <div class="card"><label class="fld" for="name">Your name<input type="text" id="name" autocomplete="name" placeholder="First and last name"></label></div>
+    <div id="courses" style="display:grid;gap:16px"></div>
     <div class="card">
-      <label class="fld">Allergies or dietary needs<textarea id="notes" placeholder="e.g. vegetarian, nut allergy. Leave blank if none."></textarea></label>
+      <label class="fld" for="notes">Allergies or dietary needs<textarea id="notes" placeholder="e.g. nut allergy, coeliac. Leave blank if none."></textarea></label>
       <input class="hp" type="text" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button type="submit" id="send">Send my choices</button>
-      <p id="msg" class="muted" role="status"></p>
+      <p id="msg" role="status"></p>
     </div>
+    <p class="legend">v vegetarian · vg vegan · vo vegan option · gfo gluten free option</p>
   </form>
 
-  <section id="thanks" class="card done" hidden>
+  <section id="thanks" class="card" hidden>
+    <div class="tick" aria-hidden="true">✓</div>
     <h2>Thanks, you're down</h2>
-    <p id="summary"></p>
-    <p class="muted">If you need to change anything, just fill the form in again with the same name and the latest answer will be used.</p>
+    <dl class="sum" id="summary"></dl>
+    <p class="note">To change anything, use the button below. Your latest answer replaces the earlier one.</p>
+    <div><button class="ghost" id="again" type="button">Change my choices</button></div>
   </section>
 </main>
 
 <script>
 /* ===== EDIT THIS SECTION ===== */
 const CONFIG = {
-  // Paste the Web app URL from the Google Apps Script deployment here
   endpoint: "https://script.google.com/macros/s/AKfycbxzKwY5aR_bjSl6C4y0nlK5E-X3cI3HN9V4XzViv78UAOnihNGyV2DBUQimqGcFYYjL/exec",
   booking: "Arron McNamara",
   date: "Saturday 7th November",
   time: "6:30pm",
-  deadline: "", // e.g. "Please reply by Tuesday 00 Month"
+  deadline: "", // e.g. "Please reply by Thursday evening"
   courses: [
     { key: "starter", label: "Starter", options: ["Soup of the day", "Haggis fritters", "Bruschetta (v)", "Pil pil prawns", "Salt & pepper chicken goujons", "Courgette fritters"] },
     { key: "main",    label: "Main",    options: ["Fish & chips", "Steak pie & mash (gfo)", "Macaroni & garlic bread", "Pan seared honey & thyme chicken salad (gfo)", "Cajun chicken pasta (vo, gfo)", "Buffalo chicken burger", "Classic smash burger (gfo)", "Veggie burger (v, vg)", "8oz sirloin steak (£5 supplement)"] },
@@ -76,28 +122,45 @@ const CONFIG = {
 
 const $ = id => document.getElementById(id);
 $("title").textContent = CONFIG.booking;
-$("facts").textContent = [CONFIG.date, CONFIG.time, CONFIG.deadline].filter(Boolean).join(" · ");
+[CONFIG.date, CONFIG.time, CONFIG.deadline].filter(Boolean).forEach(t => {
+  const s = document.createElement("span"); s.className = "chip"; s.textContent = t; $("chips").appendChild(s);
+});
+
+// Splits "Veggie burger (v, vg)" into a name and small tags for display only.
+function dishView(text) {
+  const m = text.match(/^(.*?)\s*\(([^)]*)\)\s*$/);
+  const wrap = document.createElement("span"); wrap.className = "dish";
+  const b = document.createElement("b"); b.textContent = m ? m[1] : text; wrap.appendChild(b);
+  if (m) m[2].split(",").map(x => x.trim()).filter(Boolean).forEach(t => {
+    const s = document.createElement("span"); s.className = "tag" + (t.startsWith("£") ? " price" : ""); s.textContent = t; wrap.appendChild(s);
+  });
+  return wrap;
+}
 
 CONFIG.courses.forEach(c => {
-  const card = document.createElement("div");
-  card.className = "card";
-  const h = document.createElement("h2"); h.textContent = c.label + " (optional)"; card.appendChild(h);
-  if (c.note) { const n = document.createElement("p"); n.className = "muted"; n.textContent = c.note; card.appendChild(n); }
-  [...c.options, "No " + c.label.toLowerCase()].forEach(o => {
-    const l = document.createElement("label"); l.className = "opt";
-    const i = document.createElement("input"); i.type = "radio"; i.name = c.key; i.value = o;
-    const s = document.createElement("span"); s.textContent = o;
-    l.append(i, s); card.appendChild(l);
+  const card = document.createElement("div"); card.className = "card";
+  const head = document.createElement("div"); head.className = "card-head";
+  const h = document.createElement("h2"); h.textContent = c.label;
+  const o = document.createElement("span"); o.className = "opt-label"; o.textContent = "Optional";
+  head.append(h, o); card.appendChild(head);
+  if (c.note) { const n = document.createElement("p"); n.className = "note"; n.textContent = c.note; card.appendChild(n); }
+  const list = document.createElement("div"); list.className = "opts"; list.setAttribute("role", "radiogroup"); list.setAttribute("aria-label", c.label);
+  [...c.options, "No " + c.label.toLowerCase()].forEach((opt, i, all) => {
+    const l = document.createElement("label"); l.className = "opt" + (i === all.length - 1 ? " none" : "");
+    const r = document.createElement("input"); r.type = "radio"; r.name = c.key; r.value = opt;
+    l.append(r, dishView(opt)); list.appendChild(l);
   });
-  $("courses").appendChild(card);
+  card.appendChild(list); $("courses").appendChild(card);
 });
+
+$("again").addEventListener("click", () => { $("thanks").hidden = true; $("form").hidden = false; $("send").disabled = false; $("msg").textContent = ""; window.scrollTo({ top: 0 }); });
 
 $("form").addEventListener("submit", async e => {
   e.preventDefault();
-  const msg = $("msg"); msg.className = "muted";
+  const msg = $("msg"); msg.className = "";
   if ($("website").value) return; // spam trap
   const data = { name: $("name").value.trim(), notes: $("notes").value.trim() };
-  if (!data.name) { msg.className = "err"; msg.textContent = "Please add your name."; return; }
+  if (!data.name) { msg.className = "err"; msg.textContent = "Please add your name."; $("name").focus(); return; }
   for (const c of CONFIG.courses) {
     const picked = document.querySelector(`input[name="${c.key}"]:checked`);
     data[c.key] = picked ? picked.value : "No " + c.label.toLowerCase();
@@ -107,12 +170,12 @@ $("form").addEventListener("submit", async e => {
     // text/plain avoids a CORS preflight; Apps Script reads the raw body.
     await fetch(CONFIG.endpoint, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
     $("form").hidden = true;
-    $("summary").innerHTML = "";
-    const lines = [["Name", data.name], ...CONFIG.courses.map(c => [c.label, data[c.key]])];
-    if (data.notes) lines.push(["Allergies / dietary", data.notes]);
-    lines.forEach(([k, v]) => { const d = document.createElement("div"); const b = document.createElement("b"); b.textContent = k + ": "; d.append(b, v); $("summary").appendChild(d); });
+    const sum = $("summary"); sum.innerHTML = "";
+    const rows = [["Name", data.name], ...CONFIG.courses.map(c => [c.label, data[c.key]])];
+    if (data.notes) rows.push(["Allergies / dietary", data.notes]);
+    rows.forEach(([k, v]) => { const d = document.createElement("div"), dt = document.createElement("dt"), dd = document.createElement("dd"); dt.textContent = k; dd.textContent = v; d.append(dt, dd); sum.appendChild(d); });
     $("thanks").hidden = false;
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0 });
   } catch (err) {
     $("send").disabled = false; msg.className = "err";
     msg.textContent = "Could not send. Check your connection and try again.";
