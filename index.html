@@ -81,9 +81,9 @@ $("facts").textContent = [CONFIG.date, CONFIG.time, CONFIG.deadline].filter(Bool
 CONFIG.courses.forEach(c => {
   const card = document.createElement("div");
   card.className = "card";
-  const h = document.createElement("h2"); h.textContent = c.label; card.appendChild(h);
+  const h = document.createElement("h2"); h.textContent = c.label + " (optional)"; card.appendChild(h);
   if (c.note) { const n = document.createElement("p"); n.className = "muted"; n.textContent = c.note; card.appendChild(n); }
-  c.options.forEach(o => {
+  [...c.options, "No " + c.label.toLowerCase()].forEach(o => {
     const l = document.createElement("label"); l.className = "opt";
     const i = document.createElement("input"); i.type = "radio"; i.name = c.key; i.value = o;
     const s = document.createElement("span"); s.textContent = o;
@@ -100,8 +100,7 @@ $("form").addEventListener("submit", async e => {
   if (!data.name) { msg.className = "err"; msg.textContent = "Please add your name."; return; }
   for (const c of CONFIG.courses) {
     const picked = document.querySelector(`input[name="${c.key}"]:checked`);
-    if (!picked) { msg.className = "err"; msg.textContent = `Please pick a ${c.label.toLowerCase()}.`; return; }
-    data[c.key] = picked.value;
+    data[c.key] = picked ? picked.value : "No " + c.label.toLowerCase();
   }
   $("send").disabled = true; msg.textContent = "Sending…";
   try {
