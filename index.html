@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Rest Group Menu</title>
+<style>
+:root{--bg:#f2f5f3;--surface:#fff;--fg:#13201b;--muted:#5a6a63;--line:#d5dfda;--accent:#0d5c4c;--accent-fg:#fff;--accent-soft:#dcefe8;--err:#8a4b00}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1512;--surface:#16211c;--fg:#e8f0ec;--muted:#9bb0a7;--line:#2a3a33;--accent:#5fd0b0;--accent-fg:#06231b;--accent-soft:#1b3a31;--err:#f0b866;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;padding:24px 16px 56px}
+main{max-width:640px;margin:0 auto;display:grid;gap:18px}
+h1,h2{margin:0;line-height:1.1}
+h1{font-size:clamp(28px,8vw,42px);letter-spacing:-.02em}
+h2{font-size:20px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+header{display:grid;gap:10px;padding-bottom:18px;border-bottom:2px solid var(--fg)}
+.muted{color:var(--muted);font-size:15px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px;display:grid;gap:12px}
+label.fld{display:grid;gap:6px;font-weight:600}
+input[type=text],textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px 12px;width:100%}
+textarea{min-height:76px;resize:vertical}
+.opt{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:6px;padding:12px;cursor:pointer;background:var(--bg)}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.opt input{accent-color:var(--accent);width:20px;height:20px;margin:0;flex:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button{font:inherit;font-weight:700;border-radius:6px;padding:12px 18px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-fg);cursor:pointer;justify-self:start}
+button:disabled{opacity:.5}
+.err{color:var(--err);font-weight:700}
+.done{text-align:left}
+.hp{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">The Rest · Group booking</div>
+    <h1 id="title"></h1>
+    <p class="muted" id="facts"></p>
+  </header>
+
+  <form id="form" class="card" style="padding:0;border:0;background:none" novalidate>
+    <div class="card"><label class="fld">Your name<input type="text" id="name" autocomplete="name" placeholder="First and last name"></label></div>
+    <div id="courses" style="display:grid;gap:18px"></div>
+    <div class="card">
+      <label class="fld">Allergies or dietary needs<textarea id="notes" placeholder="e.g. vegetarian, nut allergy. Leave blank if none."></textarea></label>
+      <input class="hp" type="text" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button type="submit" id="send">Send my choices</button>
+      <p id="msg" class="muted" role="status"></p>
+    </div>
+  </form>
+
+  <section id="thanks" class="card done" hidden>
+    <h2>Thanks, you're down</h2>
+    <p id="summary"></p>
+    <p class="muted">If you need to change anything, just fill the form in again with the same name and the latest answer will be used.</p>
+  </section>
+</main>
+
+<script>
+/* ===== EDIT THIS SECTION ===== */
+const CONFIG = {
+  // Paste the Web app URL from the Google Apps Script deployment here
+  endpoint: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE",
+  booking: "Arron McNamara",
+  date: "", // e.g. "Saturday 14 December"
+  time: "6:30pm",
+  deadline: "", // e.g. "Please reply by Tuesday 00 Month"
+  courses: [
+    { key: "starter", label: "Starter", options: ["Soup of the day", "Haggis fritters", "Bruschetta (v)", "Pil pil prawns", "Salt & pepper chicken goujons", "Courgette fritters"] },
+    { key: "main",    label: "Main",    options: ["Fish & chips", "Steak pie & mash (gfo)", "Macaroni & garlic bread", "Pan seared honey & thyme chicken salad (gfo)", "Cajun chicken pasta (vo, gfo)", "Buffalo chicken burger", "Classic smash burger (gfo)", "Veggie burger (v, vg)", "8oz sirloin steak (£5 supplement)"] },
+    { key: "dessert", label: "Dessert", note: "All served with vanilla ice cream.", options: ["Sticky toffee pudding", "Tablet cheesecake", "Cranachan", "Apple & pear crumble"] }
+  ]
+};
+/* ===== END EDIT SECTION ===== */
+
+const $ = id => document.getElementById(id);
+$("title").textContent = CONFIG.booking;
+$("facts").textContent = [CONFIG.date, CONFIG.time, CONFIG.deadline].filter(Boolean).join(" · ");
+
+CONFIG.courses.forEach(c => {
+  const card = document.createElement("div");
+  card.className = "card";
+  const h = document.createElement("h2"); h.textContent = c.label; card.appendChild(h);
+  if (c.note) { const n = document.createElement("p"); n.className = "muted"; n.textContent = c.note; card.appendChild(n); }
+  c.options.forEach(o => {
+    const l = document.createElement("label"); l.className = "opt";
+    const i = document.createElement("input"); i.type = "radio"; i.name = c.key; i.value = o;
+    const s = document.createElement("span"); s.textContent = o;
+    l.append(i, s); card.appendChild(l);
+  });
+  $("courses").appendChild(card);
+});
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const msg = $("msg"); msg.className = "muted";
+  if ($("website").value) return; // spam trap
+  const data = { name: $("name").value.trim(), notes: $("notes").value.trim() };
+  if (!data.name) { msg.className = "err"; msg.textContent = "Please add your name."; return; }
+  for (const c of CONFIG.courses) {
+    const picked = document.querySelector(`input[name="${c.key}"]:checked`);
+    if (!picked) { msg.className = "err"; msg.textContent = `Please pick a ${c.label.toLowerCase()}.`; return; }
+    data[c.key] = picked.value;
+  }
+  $("send").disabled = true; msg.textContent = "Sending…";
+  try {
+    // text/plain avoids a CORS preflight; Apps Script reads the raw body.
+    await fetch(CONFIG.endpoint, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+    $("form").hidden = true;
+    $("summary").innerHTML = "";
+    const lines = [["Name", data.name], ...CONFIG.courses.map(c => [c.label, data[c.key]])];
+    if (data.notes) lines.push(["Allergies / dietary", data.notes]);
+    lines.forEach(([k, v]) => { const d = document.createElement("div"); const b = document.createElement("b"); b.textContent = k + ": "; d.append(b, v); $("summary").appendChild(d); });
+    $("thanks").hidden = false;
+    window.scrollTo(0, 0);
+  } catch (err) {
+    $("send").disabled = false; msg.className = "err";
+    msg.textContent = "Could not send. Check your connection and try again.";
+  }
+});
+</script>
+</body>
+</html>
